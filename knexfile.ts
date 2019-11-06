@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   test: {
     client: "sqlite3",
     useNullAsDefault: true,
@@ -6,7 +6,7 @@ module.exports = {
       filename: "./example.db"
     },
     pool: {
-      afterCreate: (conn, cb) => {
+      afterCreate: (conn: any, cb: any) => {
         conn.run("PRAGMA foreign_keys = ON", cb);
       }
     }

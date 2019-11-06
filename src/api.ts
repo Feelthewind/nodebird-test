@@ -1,5 +1,5 @@
 import { transaction } from "objection";
-import * as express from "express";
+import express from "express";
 import Person from "./models/Person";
 
 export default (router: express.Router) => {

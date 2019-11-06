@@ -1,6 +1,5 @@
 import request from "supertest";
-const knex = require("../db/knex");
-
+import knex from "../db/knex";
 import app from "../src/app";
 
 describe("Routes: persons", () => {

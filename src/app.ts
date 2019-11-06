@@ -5,7 +5,7 @@ import Knex from "knex";
 import morgan from "morgan";
 import { Model } from "objection";
 
-const knexConfig = require("../knexfile");
+import knexConfig from "../knexfile";
 // Initialize knex.
 export const knex = Knex(knexConfig.development);
 
@@ -51,7 +51,7 @@ app.use(
 );
 const port = process.env.PORT || 8641;
 if (process.env.NODE_ENV !== "test") {
-  const server = app.listen(port, function() {
+  app.listen(port, function() {
     console.log("Example app listening at port %s", port);
   });
 }
