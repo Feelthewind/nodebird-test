@@ -15,7 +15,7 @@ export default {
   development: {
     client: "postgresql",
     connection: {
-      database: "example",
+      database: "nodebird",
       user: "postgres",
       password: "password"
     },

@@ -1,38 +1,42 @@
-import registerApi from "./api";
 import bodyParser from "body-parser";
 import express from "express";
-import Knex from "knex";
 import morgan from "morgan";
-import { Model } from "objection";
+import path from "path";
+import cookieParser from "cookie-parser";
+import session from "express-session";
+import flash from "connect-flash";
 
-import knexConfig from "../knexfile";
-// Initialize knex.
-export const knex = Knex(knexConfig.development);
+import errorHandler from "./utils/errorHandler";
+import pageRouter from "./routes/page";
 
-// Create or migrate:
-knex.migrate.latest();
+require("../db/init");
+require("dotenv").config();
 
-// Bind all Models to a knex instance. If you only have one database in
-// your server this is all you have to do. For multi database systems, see
-// the Model.bindKnex method.
-Model.knex(knex);
-
-// Unfortunately the express-promise-router types are borked. Just require():
-const router = require("express-promise-router")();
 const app = express()
+  .set("views", path.join(__dirname, "views"))
+  .set("view engine", "pug")
+  .set("port", process.env.PORT || 8001)
   .use(bodyParser.json())
   .use(morgan("dev"))
-  .use(router)
-  .set("json spaces", 2);
+  .use(express.static(path.join(__dirname, "public")))
+  .use(express.json())
+  .use(express.urlencoded({ extended: false }))
+  .use(cookieParser(process.env.COOKIE_SECRET))
+  .use(
+    session({
+      resave: false,
+      saveUninitialized: false,
+      secret: process.env.COOKIE_SECRET as string,
+      cookie: {
+        httpOnly: true,
+        secure: false
+      }
+    })
+  )
+  .use(flash());
 
-// Register our REST API.
-registerApi(router);
+app.use("/", pageRouter);
 
-// Error handling. The `ValidationError` instances thrown by objection.js have a `statusCode`
-// property that is sent as the status code of the response.
-//
-// NOTE: This is not a good error handler, this is the simplest one. See the error handing
-//       recipe for a better handler: https://vincit.github.io/objection.js/recipes/error-handling.html#error-handling
 app.use(
   (
     err: any,
@@ -41,18 +45,16 @@ app.use(
     next: express.NextFunction
   ) => {
     if (err) {
-      res
-        .status(err.statusCode || err.status || 500)
-        .send(err.data || err.message || {});
+      errorHandler(err, res);
     } else {
       next();
     }
   }
 );
-const port = process.env.PORT || 8641;
+
 if (process.env.NODE_ENV !== "test") {
-  app.listen(port, function() {
-    console.log("Example app listening at port %s", port);
+  app.listen(app.get("port"), function() {
+    console.log("Example app listening at port %s", app.get("port"));
   });
 }
 
