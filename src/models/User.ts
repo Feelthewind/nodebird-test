@@ -6,7 +6,7 @@ import User from "./User";
 export default class Person extends BaseModel {
   // prettier-ignore
   readonly id!: number;
-  email!: string;
+  email?: string;
   nick!: string;
   password?: string;
   provider?: string;
@@ -26,7 +26,7 @@ export default class Person extends BaseModel {
   // is created it is checked against this schema. http://json-schema.org/.
   static jsonSchema = {
     type: "object",
-    required: ["email", "nick"],
+    required: ["nick"],
 
     properties: {
       id: { type: "integer" },

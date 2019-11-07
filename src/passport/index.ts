@@ -1,6 +1,8 @@
-import local from "./localStrategy";
-import User from "../models/User";
 import { PassportStatic } from "passport";
+
+import local from "./localStrategy";
+import kakao from "./kakaoStrategy";
+import User from "../models/User";
 
 export default (passport: PassportStatic) => {
   passport.serializeUser((user: User, done) => {
@@ -15,4 +17,5 @@ export default (passport: PassportStatic) => {
   });
 
   local(passport);
+  kakao(passport);
 };
