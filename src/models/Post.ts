@@ -1,5 +1,7 @@
 import { Model, RelationMappings } from "objection";
 import BaseModel from "./BaseModel";
+import User from "./User";
+import Hashtag from "./Hashtag";
 
 export default class Post extends BaseModel {
   // prettier-ignore
@@ -37,23 +39,27 @@ export default class Post extends BaseModel {
   // will be joined to `modelPaths` to find the class definition, to avoid
   // require loops. The other solution to avoid require loops is to make
   // relationMappings a thunk. See Movie.ts for an example.
-  // static relationMappings: RelationMappings = {
-  //   children: {
-  //     relation: Model.HasManyRelation,
-  //     modelClass: Person,
-  //     join: {
-  //       from: "persons.id",
-  //       to: "persons.parentId"
-  //     }
-  //   },
+  static relationMappings: RelationMappings = {
+    user: {
+      relation: Model.BelongsToOneRelation,
+      modelClass: User,
+      join: {
+        from: "posts.userId",
+        to: "users.id"
+      }
+    },
 
-  //   parent: {
-  //     relation: Model.BelongsToOneRelation,
-  //     modelClass: Person,
-  //     join: {
-  //       from: "persons.parentId",
-  //       to: "persons.id"
-  //     }
-  //   }
-  // };
+    hashtags: {
+      relation: Model.ManyToManyRelation,
+      modelClass: Hashtag,
+      join: {
+        from: "posts.id",
+        through: {
+          from: "posts_hashtags.postId",
+          to: "posts_hashtags.hashtagId"
+        },
+        to: "hashtags.id"
+      }
+    }
+  };
 }
