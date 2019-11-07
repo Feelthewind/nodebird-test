@@ -4,12 +4,12 @@ module.exports = {
     useNullAsDefault: true,
     connection: {
       filename: "./example.db"
-    },
-    pool: {
-      afterCreate: (conn: any, cb: any) => {
-        conn.run("PRAGMA foreign_keys = ON", cb);
-      }
     }
+    // pool: {
+    // //   afterCreate: (conn: any, cb: any) => {
+    // //     conn.run("PRAGMA foreign_keys = ON", cb);
+    // //   }
+    // // }
   },
 
   development: {

@@ -3,12 +3,11 @@ import knex from "../db/knex";
 import app from "../src/app";
 
 describe("Routes: persons", () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     return knex.migrate.rollback().then(() => knex.migrate.latest());
-    // .then(() => knex.seed.run());
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     return knex.migrate.rollback();
   });
 
