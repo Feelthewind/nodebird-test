@@ -7,6 +7,6 @@ const knexConfig = require("../knexfile");
 const knex = Knex(knexConfig[environment]);
 if (process.env.NODE_ENV !== "test") {
   knex.migrate.latest();
+  // knex.migrate.rollback(undefined, true);
 }
-// knex.migrate.rollback(undefined, true);
 Model.knex(knex);

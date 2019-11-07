@@ -8,12 +8,13 @@ export default class Post extends BaseModel {
   readonly id!: number;
   content!: string;
   img?: string;
+  userId?: number;
   createdAt?: Date;
   updatedAt?: Date;
 
   // Optional eager relations.
-  // parent?: Person;
-  // children?: Person[];
+  hashtags?: Hashtag[];
+  user?: User;
 
   // Table name is the only required property.
   static tableName = "posts";
@@ -28,7 +29,7 @@ export default class Post extends BaseModel {
     properties: {
       id: { type: "integer" },
       content: { type: "string", minLength: 1, maxLength: 140 },
-      img: { type: "string", minLength: 1, maxLength: 200 }
+      img: { type: "string", maxLength: 200 }
     }
   };
 
@@ -42,7 +43,7 @@ export default class Post extends BaseModel {
   static relationMappings: RelationMappings = {
     user: {
       relation: Model.BelongsToOneRelation,
-      modelClass: User,
+      modelClass: "User",
       join: {
         from: "posts.userId",
         to: "users.id"
@@ -51,7 +52,7 @@ export default class Post extends BaseModel {
 
     hashtags: {
       relation: Model.ManyToManyRelation,
-      modelClass: Hashtag,
+      modelClass: "Hashtag",
       join: {
         from: "posts.id",
         through: {

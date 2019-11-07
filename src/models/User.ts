@@ -15,8 +15,9 @@ export default class Person extends BaseModel {
   updatedAt?: Date;
 
   // Optional eager relations.
-  // parent?: Person;
-  // children?: Person[];
+  posts?: Post[];
+  followers?: User[];
+  followings?: User[];
 
   // Table name is the only required property.
   static tableName = "users";

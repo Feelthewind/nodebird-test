@@ -11,6 +11,8 @@ import errorHandler from "./utils/errorHandler";
 import passportConfig from "./passport";
 import pageRouter from "./routes/page";
 import authRouter from "./routes/auth";
+import postRouter from "./routes/post";
+import userRouter from "./routes/user";
 
 require("../db/init");
 require("dotenv").config();
@@ -24,6 +26,7 @@ const app = express()
   .use(bodyParser.json())
   .use(morgan("dev"))
   .use(express.static(path.join(__dirname, "public")))
+  .use("/img", express.static(path.join(__dirname, "/../uploads")))
   .use(express.json())
   .use(express.urlencoded({ extended: false }))
   .use(cookieParser(process.env.COOKIE_SECRET))
@@ -44,6 +47,8 @@ const app = express()
 
 app.use("/", pageRouter);
 app.use("/auth", authRouter);
+app.use("/post", postRouter);
+app.use("/user", userRouter);
 
 app.use(
   (

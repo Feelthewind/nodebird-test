@@ -9,11 +9,29 @@ export default (passport: PassportStatic) => {
     done(null, user.id);
   });
 
-  passport.deserializeUser((id, done) => {
+  passport.deserializeUser((id: number, done) => {
     User.query()
-      .where("id", id)
-      .then(user => done(null, user))
-      .catch(err => done(err));
+      .findById(id)
+      // .eager(
+      //   "[followers(selectId, selectNick), followings(selectId, selectNick)]",
+      //   {
+      //     selectId: builder => {
+      //       builder.select("id");
+      //     },
+      //     selectNick: builder => {
+      //       builder.select("nick");
+      //     }
+      //   }
+      // )
+      .eager("[followers, followings]")
+      .then(user => {
+        console.dir(user);
+        done(null, user);
+      })
+      .catch(err => {
+        console.error(err);
+        done(err);
+      });
   });
 
   local(passport);

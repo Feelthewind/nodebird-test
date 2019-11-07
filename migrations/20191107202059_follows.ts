@@ -17,8 +17,6 @@ export async function up(knex: Knex): Promise<any> {
       .inTable("users")
       .onDelete("CASCADE")
       .index();
-    table.bigInteger("createdAt").notNullable();
-    table.bigInteger("updatedAt").notNullable();
   });
 }
 

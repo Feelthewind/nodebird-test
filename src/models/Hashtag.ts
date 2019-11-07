@@ -10,7 +10,7 @@ export default class Hashtag extends BaseModel {
   updatedAt?: Date;
 
   // Optional eager relations.
-  // parent?: Person;
+  posts?: Post[];
   // children?: Person[];
 
   // Table name is the only required property.
@@ -39,7 +39,7 @@ export default class Hashtag extends BaseModel {
   static relationMappings: RelationMappings = {
     posts: {
       relation: Model.ManyToManyRelation,
-      modelClass: Post,
+      modelClass: "Post",
       join: {
         from: "hashtags.id",
         through: {
