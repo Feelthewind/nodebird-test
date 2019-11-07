@@ -5,12 +5,17 @@ import path from "path";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import flash from "connect-flash";
+import passport from "passport";
 
 import errorHandler from "./utils/errorHandler";
+import passportConfig from "./passport";
 import pageRouter from "./routes/page";
+import authRouter from "./routes/auth";
 
 require("../db/init");
 require("dotenv").config();
+
+passportConfig(passport);
 
 const app = express()
   .set("views", path.join(__dirname, "views"))
@@ -33,9 +38,12 @@ const app = express()
       }
     })
   )
-  .use(flash());
+  .use(flash())
+  .use(passport.initialize())
+  .use(passport.session());
 
 app.use("/", pageRouter);
+app.use("/auth", authRouter);
 
 app.use(
   (

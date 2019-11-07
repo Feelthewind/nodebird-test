@@ -7,7 +7,7 @@ exports.up = knex => {
       .unique();
     table.string("nick", 15).notNullable();
     table.string("password", 100).nullable();
-    table.string("provider", 10).notNullable();
+    table.string("provider", 10).nullable();
     table
       .string("snsId", 30)
       .notNullable()

@@ -9,7 +9,7 @@ export default class Person extends BaseModel {
   email!: string;
   nick!: string;
   password?: string;
-  provider!: string;
+  provider?: string;
   snsId?: string;
   createdAt?: Date;
   updatedAt?: Date;
@@ -26,7 +26,7 @@ export default class Person extends BaseModel {
   // is created it is checked against this schema. http://json-schema.org/.
   static jsonSchema = {
     type: "object",
-    required: ["email", "nick", "provider"],
+    required: ["email", "nick"],
 
     properties: {
       id: { type: "integer" },
