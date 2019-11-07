@@ -1,22 +1,27 @@
 import * as Knex from "knex";
 
 export async function up(knex: Knex): Promise<any> {
-  return knex.schema.createTable("posts", table => {
+  return knex.schema.createTable("follows", table => {
     table.increments("id").primary();
     table
-      .integer("userId")
+      .integer("followingId")
       .unsigned()
       .references("id")
       .inTable("users")
-      .onDelete("SET NULL")
+      .onDelete("CASCADE")
       .index();
-    table.string("content", 140).notNullable();
-    table.string("img", 200).nullable();
+    table
+      .integer("followerId")
+      .unsigned()
+      .references("id")
+      .inTable("users")
+      .onDelete("CASCADE")
+      .index();
     table.bigInteger("createdAt").notNullable();
     table.bigInteger("updatedAt").notNullable();
   });
 }
 
 export async function down(knex: Knex): Promise<any> {
-  return knex.schema.dropTableIfExists("posts");
+  return knex.schema.dropTableIfExists("follows");
 }
