@@ -11,8 +11,7 @@ router.get("/profile", isLoggedIn, (req, res) => {
 router.get("/join", isNotLoggedIn, (req, res) => {
   res.render("join", {
     title: "회원가입 - NodeBird",
-    user: req.user,
-    joinError: req.flash("joinError")
+    user: req.user
   });
 });
 
@@ -34,8 +33,7 @@ router.get("/", async (req, res, next) => {
     res.render("main", {
       title: "NodeBird",
       twits: posts,
-      user: req.user,
-      loginError: req.flash("loginError")
+      user: req.user
     });
   } catch (error) {
     console.error(error);

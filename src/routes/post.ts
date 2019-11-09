@@ -90,4 +90,14 @@ router.get("/hashtag", async (req, res, next) => {
   }
 });
 
+router.post("/:id/like", async (req, res, next) => {
+  const user = req.user as User;
+  const post = await Post.query()
+    .findById(parseInt(req.params.id))
+    .first();
+  if (post) {
+    await post.$relatedQuery("likes").relate(user.id);
+  }
+});
+
 export default router;

@@ -3,8 +3,6 @@ import express from "express";
 import morgan from "morgan";
 import path from "path";
 import cookieParser from "cookie-parser";
-import session from "express-session";
-import flash from "connect-flash";
 import passport from "passport";
 
 import errorHandler from "./utils/errorHandler";
@@ -30,25 +28,12 @@ const app = express()
   .use(express.json())
   .use(express.urlencoded({ extended: false }))
   .use(cookieParser(process.env.COOKIE_SECRET))
-  .use(
-    session({
-      resave: false,
-      saveUninitialized: false,
-      secret: process.env.COOKIE_SECRET as string,
-      cookie: {
-        httpOnly: true,
-        secure: false
-      }
-    })
-  )
-  .use(flash())
-  .use(passport.initialize())
-  .use(passport.session());
+  .use(passport.initialize());
 
 app.use("/", pageRouter);
 app.use("/auth", authRouter);
 app.use("/post", postRouter);
-app.use("/user", userRouter);
+app.use("/user", passport.authenticate("jwt", { session: false }), userRouter);
 
 app.use(
   (

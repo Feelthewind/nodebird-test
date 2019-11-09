@@ -18,6 +18,7 @@ export default class Person extends BaseModel {
   posts?: Post[];
   followers?: User[];
   followings?: User[];
+  likes?: Post[];
 
   // Table name is the only required property.
   static tableName = "users";
@@ -79,6 +80,19 @@ export default class Person extends BaseModel {
           to: "follows.followingId"
         },
         to: "users.id"
+      }
+    },
+
+    likes: {
+      relation: Model.ManyToManyRelation,
+      modelClass: "Post",
+      join: {
+        from: "users.id",
+        through: {
+          from: "likes.userId",
+          to: "likes.postId"
+        },
+        to: "posts.id"
       }
     }
   };

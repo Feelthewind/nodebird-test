@@ -15,6 +15,7 @@ export default class Post extends BaseModel {
   // Optional eager relations.
   hashtags?: Hashtag[];
   user?: User;
+  likers?: User[];
 
   // Table name is the only required property.
   static tableName = "posts";
@@ -60,6 +61,19 @@ export default class Post extends BaseModel {
           to: "posts_hashtags.hashtagId"
         },
         to: "hashtags.id"
+      }
+    },
+
+    likers: {
+      relation: Model.ManyToManyRelation,
+      modelClass: "User",
+      join: {
+        from: "posts.id",
+        through: {
+          from: "likes.postId",
+          to: "likes.userId"
+        },
+        to: "users.id"
       }
     }
   };

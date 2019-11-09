@@ -20,4 +20,8 @@ router.post("/:id/follow", isLoggedIn, async (req: any, res, next) => {
   }
 });
 
+router.get("/profile", (req, res, next) => {
+  res.send(req.user);
+});
+
 export default router;

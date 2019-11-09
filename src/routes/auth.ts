@@ -1,6 +1,7 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import passport from "passport";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 import { isNotLoggedIn, isLoggedIn } from "./middlewares";
 import User from "../models/User";
@@ -14,7 +15,6 @@ router.post("/join", isNotLoggedIn, async (req, res, next) => {
       .where("email", email)
       .first();
     if (exUser) {
-      req.flash("joinError", "이미 가입된 이메일입니다.");
       return res.redirect("/join");
     }
     const hash = await bcrypt.hash(password, 12);
@@ -27,21 +27,28 @@ router.post("/join", isNotLoggedIn, async (req, res, next) => {
 });
 
 router.post("/login", isNotLoggedIn, (req, res, next) => {
-  passport.authenticate("local", (authError, user, info) => {
-    if (authError) {
-      console.error(authError);
-      return next(authError);
+  passport.authenticate("local", { session: false }, (err, user, info) => {
+    if (err || !user) {
+      return res.status(400).json({
+        message: info.message,
+        user
+      });
     }
-    if (!user) {
-      req.flash("loginError", info.message);
-      return res.redirect("/");
-    }
-    return req.login(user, loginError => {
+
+    return req.login(user, { session: false }, loginError => {
       if (loginError) {
-        console.error(loginError);
-        return next(loginError);
+        res.send(err);
       }
-      return res.redirect("/");
+
+      const { id, nick } = user as User;
+      const token = jwt.sign({ id, nick }, process.env.JWT_SECRET as string);
+      return res.json({
+        user: {
+          id,
+          nick
+        },
+        token
+      });
     });
   })(req, res, next);
 });
@@ -52,15 +59,21 @@ router.get("/logout", isLoggedIn, (req, res) => {
   res.redirect("/");
 });
 
-router.get("/kakao", passport.authenticate("kakao"));
+router.get("/kakao", passport.authenticate("kakao", { session: false }));
 
 router.get(
   "/kakao/callback",
-  passport.authenticate("kakao", {
-    failureRedirect: "/"
-  }),
+  passport.authenticate("kakao", { session: false }),
   (req, res) => {
-    res.redirect("/");
+    const { id, nick } = req.user as User;
+    const token = jwt.sign({ id, nick }, process.env.JWT_SECRET as string);
+    return res.json({
+      user: {
+        id,
+        nick
+      },
+      token
+    });
   }
 );
 
