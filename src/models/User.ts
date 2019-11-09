@@ -1,9 +1,10 @@
 import { Model, RelationMappings } from "objection";
+import bcrypt from "bcrypt";
+
 import BaseModel from "./BaseModel";
 import Post from "./Post";
-import User from "./User";
 
-export default class Person extends BaseModel {
+export default class User extends BaseModel {
   // prettier-ignore
   readonly id!: number;
   email?: string;

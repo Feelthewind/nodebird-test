@@ -53,6 +53,7 @@ router.post("/", isLoggedIn, upload2.none(), async (req, res, next) => {
           if (fetched.length === 0) {
             return await Hashtag.query().insert({ title: normalized });
           }
+          return;
         })
       );
       await Promise.all(

@@ -11,11 +11,10 @@ import pageRouter from "./routes/page";
 import authRouter from "./routes/auth";
 import postRouter from "./routes/post";
 import userRouter from "./routes/user";
+import jwtStrategy from "./passport/jwtStrategy";
 
 require("../db/init");
 require("dotenv").config();
-
-passportConfig(passport);
 
 const app = express()
   .set("views", path.join(__dirname, "views"))
@@ -29,6 +28,9 @@ const app = express()
   .use(express.urlencoded({ extended: false }))
   .use(cookieParser(process.env.COOKIE_SECRET))
   .use(passport.initialize());
+
+passportConfig(passport);
+passport.use(jwtStrategy());
 
 app.use("/", pageRouter);
 app.use("/auth", authRouter);

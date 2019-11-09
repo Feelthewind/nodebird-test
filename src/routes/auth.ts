@@ -18,8 +18,13 @@ router.post("/join", isNotLoggedIn, async (req, res, next) => {
       return res.redirect("/join");
     }
     const hash = await bcrypt.hash(password, 12);
-    await User.query().insert({ email, nick, password: hash });
-    return res.redirect("/");
+    const user = await User.query().insert({ email, nick, password: hash });
+    const token = jwt.sign({ id: user.id, nick: user.nick }, process.env
+      .JWT_SECRET as string);
+
+    return res.json({
+      token
+    });
   } catch (error) {
     console.error(error);
     return next(error);

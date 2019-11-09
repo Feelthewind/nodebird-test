@@ -9,7 +9,7 @@ export default class BaseModel extends Model {
   // class or a mixin, and not just one of your leaf models.
   //
 
-  $beforeInsert() {
+  async $beforeInsert() {
     this.createdAt = new Date();
     this.updatedAt = new Date();
   }

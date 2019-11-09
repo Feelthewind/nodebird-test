@@ -2,6 +2,7 @@ import { PassportStatic } from "passport";
 
 import local from "./localStrategy";
 import kakao from "./kakaoStrategy";
+import jwt from "./jwtStrategy";
 import User from "../models/User";
 
 export default (passport: PassportStatic) => {

@@ -1,6 +1,6 @@
 import express from "express";
-import User from "../models/User";
 
+import User from "../models/User";
 import { isLoggedIn } from "./middlewares";
 
 const router = express.Router();
